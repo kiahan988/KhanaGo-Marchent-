@@ -3,406 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>khanaGo Merchant Partner</title>
+  <title>khanaGo Merchant Onboarding</title>
   <style>
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-    body { margin: 0; background: #f8fafc; color: #0f172a; min-height: 100vh; display: flex; flex-direction: column; }
-    .brand-grad { background: linear-gradient(135deg, #FF512F 0%, #F09819 100%); }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: #f8fafc; color: #0f172a; padding: 14px; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    .top-bar { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .brand { font-size: 20px; font-weight: 900; }
+    .brand span { color: #ea580c; }
+    .toggle-btn { border: none; padding: 10px 16px; border-radius: 999px; font-weight: 900; font-size: 13px; cursor: pointer; }
+    .online { background: #dcfce7; color: #166534; }
+    .offline { background: #fee2e2; color: #991b1b; }
 
-    header { background: #fff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 30; }
-    .hdr-inner { max-width: 1120px; margin: 0 auto; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .hdr-left { display: flex; align-items: center; gap: 8px; }
-    .icon-btn { background: #f1f5f9; border: none; width: 38px; height: 38px; border-radius: 10px; font-size: 18px; font-weight: 800; cursor: pointer; }
-    .brand-name { font-size: 18px; font-weight: 900; line-height: 1; }
-    .brand-name span { color: #ea580c; }
-    .brand-tag { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-
-    .hdr-center { display: flex; align-items: center; gap: 8px; }
-    .buzzer-btn { background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; padding: 7px 11px; border-radius: 999px; font-size: 12px; font-weight: 800; cursor: pointer; }
-    .onoff-btn { display: flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 999px; font-size: 12px; font-weight: 900; cursor: pointer; border: 1px solid #86efac; background: #dcfce7; color: #166534; }
-    .onoff-btn.off { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: #16a34a; }
-    .onoff-btn.off .dot { background: #dc2626; }
-
-    .shop-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #fdba74; cursor: pointer; background: #ffedd5; }
-
-    #drawerBackdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; }
-    .drawer { width: 280px; max-width: 84vw; height: 100%; background: #fff; padding: 14px; overflow-y: auto; }
-    .drawer-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; }
-    .nav-btn { width: 100%; text-align: left; background: none; border: none; padding: 10px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; color: #1e293b; cursor: pointer; margin-bottom: 3px; }
-    .nav-btn.active { background: #ffedd5; color: #c2410c; font-weight: 800; }
-
-    main { max-width: 1120px; width: 100%; margin: 0 auto; padding: 16px 14px 40px; flex: 1; }
-    .banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: 14px; padding: 12px 14px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px; }
-    .sec-btn { background: #fff; border: 1px solid #f59e0b; color: #78350f; padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; }
-
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 16px; }
-    .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; }
-    .stat-card.grad { color: #fff; border: none; }
-
-    .box { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-    .row-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 12px; }
-    .field label { display: block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #334155; margin-bottom: 4px; }
-    .field input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 13px; }
-    .save-btn { background: linear-gradient(135deg, #FF512F 0%, #F09819 100%); color: #fff; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer; }
-    .preview-img { width: 84px; height: 70px; object-fit: cover; border-radius: 10px; border: 1px solid #cbd5e1; margin-top: 8px; display: none; }
-
-    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .pill { padding: 7px 13px; border-radius: 999px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer; }
-    .pill.active { background: #0f172a; color: #fff; border-color: #0f172a; }
-
-    .ord-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; }
-    .item-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center; }
-    .toggle-pill { padding: 6px 12px; border-radius: 999px; border: none; font-size: 11px; font-weight: 800; cursor: pointer; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+    h2 { margin: 0 0 12px; font-size: 18px; font-weight: 900; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+    .field { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 4px; color: #334155; }
+    input[type="text"], input[type="tel"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; }
+    .prev { width: 80px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 6px; display: none; }
+    .save-btn { width: 100%; border: none; padding: 13px; border-radius: 12px; background: linear-gradient(135deg, #FF512F, #F09819); color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; }
+    .msg { margin-top: 10px; font-size: 13px; font-weight: 800; color: #15803d; }
+    .preview-card { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 14px; padding: 14px; font-size: 13px; line-height: 1.6; }
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="hdr-inner">
-      <div class="hdr-left">
-        <button type="button" class="icon-btn" onclick="toggleDrawer(true)">☰</button>
-        <div>
-          <div class="brand-name">khana<span>Go</span></div>
-          <div class="brand-tag">Merchant Partner</div>
-        </div>
-      </div>
-
-      <div class="hdr-center">
-        <button type="button" class="buzzer-btn" onclick="triggerBuzzer(true)">🔔 Buzzer</button>
-        <button type="button" id="onOffBtn" class="onoff-btn" onclick="toggleOnline()">
-          <span class="dot"></span>
-          <span id="onOffText">ONLINE</span>
-        </button>
-      </div>
-
-      <img id="hdrLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' rx='40' fill='%23FF512F'/%3E%3Ctext x='40' y='48' font-size='26' font-weight='bold' fill='white' text-anchor='middle'%3EkG%3C/text%3E%3C/svg%3E" class="shop-avatar" onclick="openTab('onboarding')" alt="Logo" />
-    </div>
-  </header>
-
-  <div id="drawerBackdrop" onclick="toggleDrawer(false)">
-    <aside class="drawer" onclick="event.stopPropagation()">
-      <div class="drawer-head">
-        <div>
-          <div id="drawerShopTitle" style="font-weight:900;font-size:15px;">khanaGo Shop</div>
-          <div id="drawerOwnerSub" style="font-size:11px;color:#64748b;">Merchant Portal</div>
-        </div>
-        <button type="button" class="icon-btn" onclick="toggleDrawer(false)">&times;</button>
-      </div>
-
-      <button type="button" class="nav-btn active" onclick="menuSelect('dashboard', this)">📊 Dashboard</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('onboarding', this)">🏪 Shop Onboarding & Docs</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('orders', this)">🛍️ Orders</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('items', this)">📦 Items</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('menu', this)">📋 Menu</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('wallet', this)">💳 Wallet</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('reports', this)">📈 Reports</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('marketing', this)">📣 Marketing</button>
-      <button type="button" class="nav-btn" onclick="menuSelect('settings', this)">⚙️ Settings</button>
-    </aside>
-  </div>
-
-  <main>
-    <div class="banner">
-      <div>
-        <div id="bannerTitle" style="font-size:13px;font-weight:900;color:#78350f;">Shop Onboarding Status</div>
-        <div style="font-size:12px;color:#92400e;">Shop logo, owner details, bank account aur FSSAI licence save karte hi khanaGo mein sync hoga.</div>
-      </div>
-      <button type="button" class="sec-btn" onclick="openTab('onboarding')">Shop Onboarding & Docs</button>
+  <div class="wrap">
+    <div class="top-bar">
+      <div class="brand">khana<span>Go</span> <span style="font-size:12px;color:#64748b;font-weight:700;">Merchant</span></div>
+      <button type="button" id="statusBtn" class="toggle-btn online" onclick="toggleShop()">SHOP: ONLINE</button>
     </div>
 
-    <section id="sec-dashboard" class="m-sec">
-      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;">
-        <h1 id="dashShopName" style="margin:0;font-size:22px;font-weight:900;">khanaGo Merchant</h1>
-        <button type="button" class="save-btn" onclick="simulateOrder()">+ Test New Order (Buzzer)</button>
-      </div>
-
-      <div class="pills">
-        <button type="button" class="pill active" onclick="changePeriod('Today', this)">Today</button>
-        <button type="button" class="pill" onclick="changePeriod('Yesterday', this)">Yesterday</button>
-        <button type="button" class="pill" onclick="changePeriod('7 Days', this)">7 Days</button>
-        <button type="button" class="pill" onclick="changePeriod('Current Month', this)">Current Month</button>
-      </div>
-
-      <div class="grid-3">
-        <div class="stat-card grad brand-grad">
-          <div style="font-size:11px;font-weight:800;opacity:0.9;">ONLINE PAYOUT (<span class="p-lbl">Today</span>)</div>
-          <div id="statPayout" style="font-size:30px;font-weight:900;margin-top:8px;">₹0</div>
-        </div>
-        <div class="stat-card">
-          <div style="font-size:11px;font-weight:800;color:#64748b;">TOTAL ORDERS</div>
-          <div id="statOrders" style="font-size:30px;font-weight:900;margin-top:8px;">0</div>
-          <div id="statNew" style="font-size:12px;font-weight:800;color:#ea580c;margin-top:4px;">0 New</div>
-        </div>
-        <div class="stat-card">
-          <div style="font-size:11px;font-weight:800;color:#64748b;">ACTIVE ITEMS</div>
-          <div id="statItems" style="font-size:30px;font-weight:900;margin-top:8px;">0</div>
-        </div>
-      </div>
-
-      <div class="box">
-        <div style="font-weight:800;font-size:15px;margin-bottom:10px;">Recent Orders</div>
-        <div id="dashOrdersBox"></div>
-      </div>
-    </section>
-
-    <section id="sec-onboarding" class="m-sec" style="display:none;">
-      <form class="box" onsubmit="saveOnboarding(event)">
-        <h2 style="margin:0 0 14px;font-size:19px;font-weight:900;">Shop Onboarding, Bank & FSSAI Licence</h2>
-
-        <div class="row-3">
+    <div class="card">
+      <h2>Shop Onboarding & Documents</h2>
+      <form id="shopForm" onsubmit="handleSave(event)">
+        <div class="grid-2">
           <div class="field">
             <label>Shop Name *</label>
-            <input type="text" id="mShopName" required placeholder="Shop ka naam" />
+            <input type="text" id="shopName" required placeholder="Shop ka naam" />
           </div>
-          <div class="field">
-            <label>Category *</label>
-            <input type="text" id="mShopCat" required placeholder="e.g. Fast Food, Meals" />
-          </div>
-          <div class="field">
-            <label>Delivery Time *</label>
-            <input type="text" id="mShopTime" required placeholder="e.g. 20-30 mins" />
-          </div>
-        </div>
-
-        <div class="row-3">
           <div class="field">
             <label>Owner Full Name *</label>
-            <input type="text" id="mOwnerName" required placeholder="Owner ka naam" />
-          </div>
-          <div class="field">
-            <label>Owner Phone *</label>
-            <input type="tel" id="mOwnerPhone" required pattern="[0-9]{10}" maxlength="10" placeholder="10 digit mobile" />
-          </div>
-          <div class="field">
-            <label>Shop Address *</label>
-            <input type="text" id="mShopAddr" required placeholder="Shop address" />
+            <input type="text" id="ownerName" required placeholder="Owner ka naam" />
           </div>
         </div>
 
-        <div class="row-3">
+        <div class="grid-2">
+          <div class="field">
+            <label>Owner Mobile Number *</label>
+            <input type="tel" id="ownerPhone" required pattern="[0-9]{10}" maxlength="10" placeholder="10 digit mobile" />
+          </div>
           <div class="field">
             <label>Bank Account Number *</label>
-            <input type="text" id="mBankAcc" required placeholder="Account number" />
-          </div>
-          <div class="field">
-            <label>IFSC Code / Bank *</label>
-            <input type="text" id="mBankIfsc" required placeholder="IFSC code" />
-          </div>
-          <div class="field">
-            <label>FSSAI Licence Number *</label>
-            <input type="text" id="mFssaiNo" required maxlength="14" placeholder="14 digit FSSAI licence" />
+            <input type="text" id="bankAcc" required placeholder="Account number" />
           </div>
         </div>
 
-        <div class="row-3">
+        <div class="field">
+          <label>FSSAI Licence Number *</label>
+          <input type="text" id="fssaiNo" required placeholder="FSSAI licence number" />
+        </div>
+
+        <div class="grid-2">
           <div class="field">
             <label>Shop Logo Image</label>
-            <input type="file" accept="image/*" onchange="onImgPick(event, 'logo')" />
-            <img id="prevLogo" class="preview-img" alt="Logo" />
+            <input type="file" accept="image/*" onchange="readImg(event, 'logo')" />
+            <img id="imgLogo" class="prev" alt="Logo" />
           </div>
           <div class="field">
-            <label>Bank Account Image</label>
-            <input type="file" accept="image/*" onchange="onImgPick(event, 'bankImg')" />
-            <img id="prevBank" class="preview-img" alt="Bank" />
-          </div>
-          <div class="field">
-            <label>FSSAI Licence Image</label>
-            <input type="file" accept="image/*" onchange="onImgPick(event, 'fssaiImg')" />
-            <img id="prevFssai" class="preview-img" alt="FSSAI" />
+            <label>Bank / FSSAI Image</label>
+            <input type="file" accept="image/*" onchange="readImg(event, 'docImg')" />
+            <img id="imgDoc" class="prev" alt="Doc" />
           </div>
         </div>
 
-        <button type="submit" class="save-btn">Save & Sync Shop to khanaGo</button>
-        <div id="saveMsg" style="margin-top:8px;font-size:12px;font-weight:800;color:#15803d;"></div>
+        <button type="submit" class="save-btn">Save Shop Details</button>
+        <div id="saveStatus" class="msg"></div>
       </form>
-    </section>
+    </div>
 
-    <section id="sec-orders" class="m-sec" style="display:none;">
-      <div class="box">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <h2 style="margin:0;font-size:19px;font-weight:900;">Orders</h2>
-          <button type="button" class="save-btn" onclick="simulateOrder()">+ Simulate Order</button>
-        </div>
-        <div class="pills">
-          <button type="button" class="pill active" onclick="setOrdFilter('All', this)">All</button>
-          <button type="button" class="pill" onclick="setOrdFilter('New', this)">New</button>
-          <button type="button" class="pill" onclick="setOrdFilter('Preparing', this)">Preparing</button>
-          <button type="button" class="pill" onclick="setOrdFilter('Ready', this)">Ready</button>
-          <button type="button" class="pill" onclick="setOrdFilter('Out For Delivery', this)">Out For Delivery</button>
-          <button type="button" class="pill" onclick="setOrdFilter('Completed', this)">Completed</button>
-          <button type="button" class="pill" onclick="setOrdFilter('Cancelled', this)">Cancelled</button>
-        </div>
-        <div id="ordersFullBox"></div>
-      </div>
-    </section>
-
-    <section id="sec-items" class="m-sec" style="display:none;">
-      <form class="box" onsubmit="addMenuItem(event)">
-        <h2 id="itemSecTitle" style="margin:0 0 12px;font-size:19px;font-weight:900;">Item Management</h2>
-        <div class="row-3">
-          <div class="field">
-            <label>Item Name *</label>
-            <input type="text" id="itemNameIn" required placeholder="Dish ka naam" />
-          </div>
-          <div class="field">
-            <label>Price (₹) *</label>
-            <input type="number" id="itemPriceIn" required min="1" placeholder="Price" />
-          </div>
-          <div class="field" style="display:flex;align-items:flex-end;">
-            <button type="submit" class="save-btn" style="width:100%;">+ Add Item</button>
-          </div>
-        </div>
-      </form>
-      <div id="itemsListGrid" class="grid-3"></div>
-    </section>
-
-    <section id="sec-info" class="m-sec" style="display:none;">
-      <div id="infoBox" class="box"></div>
-    </section>
-  </main>
+    <div class="card">
+      <h2>Saved Shop Summary</h2>
+      <div id="summaryBox" class="preview-card">Abhi koi shop save nahi hui hai.</div>
+    </div>
+  </div>
 
   <script>
-    var M_KEY = "khanago_merchant_clean_v3";
-    var S_KEY = "khanago_shared_shops";
-
-    var isOnline = true;
-    var currentPeriod = "Today";
-    var currentOrdFilter = "All";
-    var shopData = {
-      name: "Sharma Misthan & Bhojnalaya",
-      category: "Meals & Snacks",
-      deliveryTime: "20-30 mins",
-      ownerName: "Kishan Kumar",
-      ownerPhone: "7599044129",
-      address: "Jaswant Nagar, Etawah",
+    var KEY = "khanago_simple_merchant_v1";
+    var data = {
+      online: true,
+      shopName: "",
+      ownerName: "",
+      ownerPhone: "",
       bankAcc: "",
-      bankIfsc: "",
       fssaiNo: "",
       logo: "",
-      bankImg: "",
-      fssaiImg: ""
+      docImg: ""
     };
-    var menuList = [
-      { id: 1, name: "Special Thali", price: 120, active: true },
-      { id: 2, name: "Paneer Paratha (2 pcs)", price: 90, active: true },
-      { id: 3, name: "Samosa (2 pcs)", price: 30, active: true }
-    ];
-    var orderList = [
-      { id: 101, customer: "Customer", items: "Special Thali x1", amount: 120, status: "New", paid: true }
-    ];
 
     try {
-      var savedRaw = localStorage.getItem(M_KEY);
-      if (savedRaw) {
-        var parsed = JSON.parse(savedRaw);
-        if (parsed && typeof parsed === "object") {
-          if (typeof parsed.isOnline === "boolean") isOnline = parsed.isOnline;
-          if (parsed.currentPeriod) currentPeriod = parsed.currentPeriod;
-          if (parsed.currentOrdFilter) currentOrdFilter = parsed.currentOrdFilter;
-          if (parsed.shopData) {
-            for (var k in parsed.shopData) {
-              shopData[k] = parsed.shopData[k];
-            }
-          }
-          if (parsed.menuList && parsed.menuList.length) menuList = parsed.menuList;
-          if (parsed.orderList) orderList = parsed.orderList;
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        for (var k in parsed) {
+          data[k] = parsed[k];
         }
       }
     } catch (e) {}
 
-    function persistAll() {
+    function saveLocal() {
       try {
-        localStorage.setItem(M_KEY, JSON.stringify({
-          isOnline: isOnline,
-          currentPeriod: currentPeriod,
-          currentOrdFilter: currentOrdFilter,
-          shopData: shopData,
-          menuList: menuList,
-          orderList: orderList
-        }));
-      } catch (e) {}
-
-      try {
-        var existing = JSON.parse(localStorage.getItem(S_KEY)) || [];
-        var sid = "m_" + (shopData.ownerPhone || "shop");
-        var activeMenu = [];
-        for (var i = 0; i < menuList.length; i++) {
-          if (menuList[i].active) {
-            activeMenu.push({ name: menuList[i].name, price: Number(menuList[i].price) });
-          }
-        }
-        var rest = [];
-        for (var j = 0; j < existing.length; j++) {
-          if (existing[j].id !== sid) rest.push(existing[j]);
-        }
-        if (isOnline && activeMenu.length > 0) {
-          rest.unshift({
-            id: sid,
-            name: shopData.name,
-            category: shopData.category,
-            deliveryTime: shopData.deliveryTime,
-            logo: shopData.logo || "",
-            items: activeMenu
-          });
-        }
-        localStorage.setItem(S_KEY, JSON.stringify(rest));
+        localStorage.setItem(KEY, JSON.stringify(data));
       } catch (e) {}
     }
 
-    function triggerBuzzer(manual) {
-      try {
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) {
-          var actx = new AC();
-          var t = actx.currentTime;
-          [0, 0.25, 0.5].forEach(function (d) {
-            var osc = actx.createOscillator();
-            var g = actx.createGain();
-            osc.type = "sawtooth";
-            osc.frequency.setValueAtTime(760, t + d);
-            g.gain.setValueAtTime(0.22, t + d);
-            g.gain.exponentialRampToValueAtTime(0.001, t + d + 0.2);
-            osc.connect(g);
-            g.connect(actx.destination);
-            osc.start(t + d);
-            osc.stop(t + d + 0.21);
-          });
-        }
-      } catch (e) {}
-      if (manual) alert("🔔 Order Buzzer Sound Played!");
+    function toggleShop() {
+      data.online = !data.online;
+      saveLocal();
+      renderView();
     }
 
-    function simulateOrder() {
-      var pick = menuList[0] || { name: "Special Thali", price: 120 };
-      orderList.unshift({
-        id: Math.floor(1000 + Math.random() * 9000),
-        customer: "khanaGo Customer",
-        items: pick.name + " x1",
-        amount: Number(pick.price),
-        status: "New",
-        paid: true
-      });
-      persistAll();
-      triggerBuzzer(false);
-      updateUI();
+    function readImg(ev, key) {
+      var file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        data[key] = e.target.result;
+        saveLocal();
+        renderView();
+      };
+      reader.readAsDataURL(file);
     }
 
-    function toggleOnline() {
-      isOnline = !isOnline;
-      persistAll();
-      updateUI();
+    function handleSave(e) {
+      e.preventDefault();
+      data.shopName = document.getElementById("shopName").value.trim();
+      data.ownerName = document.getElementById("ownerName").value.trim();
+      data.ownerPhone = document.getElementById("ownerPhone").value.trim();
+      data.bankAcc = document.getElementById("bankAcc").value.trim();
+      data.fssaiNo = document.getElementById("fssaiNo").value.trim();
+      saveLocal();
+      document.getElementById("saveStatus").textContent = "Shop details save ho gayi hain!";
+      renderView();
     }
 
-    function toggleDrawer(show) {
-      document.getElementById("drawerBackdrop").style.display = show ? "block" : "none";
+    function renderView() {
+      var btn = document.getElementById("statusBtn");
+      if (data.online) {
+        btn.textContent = "SHOP: ONLINE";
+        btn.className = "toggle-btn online";
+      } else {
+        btn.textContent = "SHOP: OFFLINE";
+        btn.className = "toggle-btn offline";
+      }
+
+      document.getElementById("shopName").value = data.shopName || "";
+      document.getElementById("ownerName").value = data.ownerName || "";
+      document.getElementById("ownerPhone").value = data.ownerPhone || "";
+      document.getElementById("bankAcc").value = data.bankAcc || "";
+      document.getElementById("fssaiNo").value = data.fssaiNo || "";
+
+      var logoEl = document.getElementById("imgLogo");
+      if (data.logo) {
+        logoEl.src = data.logo;
+        logoEl.style.display = "block";
+      }
+
+      var docEl = document.getElementById("imgDoc");
+      if (data.docImg) {
+        docEl.src = data.docImg;
+        docEl.style.display = "block";
+      }
+
+      var box = document.getElementById("summaryBox");
+      if (!data.shopName && !data.ownerName) {
+        box.innerHTML = "Abhi koi shop save nahi hui hai.";
+      } else {
+        box.innerHTML =
+          "<strong>Shop:</strong> " + (data.shopName || "-") + "<br>" +
+          "<strong>Owner:</strong> " + (data.ownerName || "-") + " (" + (data.ownerPhone || "-") + ")<br>" +
+          "<strong>Account No:</strong> " + (data.bankAcc || "-") + "<br>" +
+          "<strong>FSSAI Licence:</strong> " + (data.fssaiNo || "-") + "<br>" +
+          "<strong>Status:</strong> " + (data.online ? "ONLINE" : "OFFLINE");
+      }
     }
 
-    function menuSelect(name, btn) {
-      toggleDrawer(false);
-      var allNavs = document.querySelectorAll(".nav-btn");
-      for (var i = 0; i < allNavs.length; i++) allNavs[i].classList.remove("active");
-      if (btn) btn.classList.add("active");
-
-      if (name === "menu" || name === "items") {
-        document.getElementById("itemSecTitle").textContent = name === "menu" ? "Men
+    renderView();
+  </script>
+</body>
+</html>
