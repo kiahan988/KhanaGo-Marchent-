@@ -5,34 +5,251 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>khanaGo Merchant</title>
   <style>
-    body { font-family: sans-serif; background: #f8fafc; margin: 0; padding: 16px; }
-    .box { max-width: 500px; margin: auto; background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #ddd; }
-    input, button { width: 100%; padding: 12px; margin-top: 10px; font-size: 15px; border-radius: 8px; }
-    input { border: 1px solid #ccc; box-sizing: border-box; }
-    button { background: #ea580c; color: #fff; border: none; font-weight: bold; cursor: pointer; }
-    #out { margin-top: 14px; padding: 12px; background: #fff7ed; border-radius: 8px; display: none; }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: #f8fafc; color: #0f172a; padding: 14px; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+
+    .top { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .brand { font-size: 19px; font-weight: 900; }
+    .brand span { color: #ea580c; }
+    .top-right { display: flex; align-items: center; gap: 8px; }
+    .status-btn { border: none; padding: 9px 14px; border-radius: 999px; font-size: 12px; font-weight: 900; cursor: pointer; }
+    .online { background: #dcfce7; color: #166534; }
+    .offline { background: #fee2e2; color: #991b1b; }
+    .mini-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #fdba74; background: #ffedd5; display: none; }
+
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    h2, h3 { margin: 0 0 12px; font-size: 18px; font-weight: 900; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+    .field { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 4px; }
+    input[type="text"], input[type="tel"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; }
+    .prev { width: 78px; height: 62px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 6px; display: none; }
+
+    .primary-btn { width: 100%; border: none; padding: 13px; border-radius: 10px; background: #ea580c; color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+    .sec-btn { border: 1px solid #cbd5e1; background: #fff; color: #0f172a; padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; }
+
+    #dashView { display: none; }
+    .dash-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .info-box { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 1.65; }
+    .docs-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .doc-thumb { width: 84px; height: 68px; object-fit: cover; border-radius: 8px; border: 1px solid #fdba74; display: none; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h3>khanaGo Merchant Setup</h3>
-    <input type="text" id="sname" placeholder="Shop ka naam likhein" />
-    <button id="sbtn" type="button">Save Shop</button>
-    <div id="out"></div>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">khana<span>Go</span> <span style="font-size:12px;color:#64748b;font-weight:700;">Merchant</span></div>
+      <div class="top-right">
+        <button id="statusBtn" type="button" class="status-btn online">SHOP: ONLINE</button>
+        <img id="topLogo" class="mini-logo" alt="Logo" />
+      </div>
+    </div>
+
+    <!-- SETUP / ONBOARDING VIEW -->
+    <div id="setupView" class="card">
+      <h2>khanaGo Merchant Onboarding</h2>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Shop Name *</label>
+          <input type="text" id="shopName" placeholder="Shop ka naam likhein" />
+        </div>
+        <div class="field">
+          <label>Owner Name *</label>
+          <input type="text" id="ownerName" placeholder="Owner ka naam" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Owner Mobile Number *</label>
+          <input type="tel" id="ownerPhone" maxlength="10" placeholder="10 digit mobile" />
+        </div>
+        <div class="field">
+          <label>Bank Account Number *</label>
+          <input type="text" id="bankAcc" placeholder="Bank account number" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>FSSAI Licence Number *</label>
+        <input type="text" id="fssaiNo" placeholder="FSSAI licence number" />
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Shop Logo Image</label>
+          <input type="file" id="logoFile" accept="image/*" />
+          <img id="prevLogo" class="prev" alt="Logo Preview" />
+        </div>
+        <div class="field">
+          <label>Bank / FSSAI Image</label>
+          <input type="file" id="docFile" accept="image/*" />
+          <img id="prevDoc" class="prev" alt="Doc Preview" />
+        </div>
+      </div>
+
+      <button id="saveBtn" type="button" class="primary-btn">Save & Open Dashboard</button>
+      <div id="errMsg" style="margin-top:8px;color:#dc2626;font-size:13px;font-weight:700;"></div>
+    </div>
+
+    <!-- DASHBOARD VIEW (SHOWN AFTER SAVE) -->
+    <div id="dashView" class="card">
+      <div class="dash-head">
+        <h3 id="dashTitle" style="margin:0;">Merchant Dashboard</h3>
+        <button id="editBtn" type="button" class="sec-btn">Edit Shop / Docs</button>
+      </div>
+      <div id="summaryBox" class="info-box"></div>
+      <div class="docs-row">
+        <img id="dashLogoImg" class="doc-thumb" alt="Shop Logo" />
+        <img id="dashDocImg" class="doc-thumb" alt="Doc Image" />
+      </div>
+    </div>
   </div>
 
   <script>
-    document.getElementById("sbtn").addEventListener("click", function () {
-      var val = document.getElementById("sname").value.trim();
-      var out = document.getElementById("out");
-      if (!val) {
-        out.style.display = "block";
-        out.textContent = "Pehle shop ka naam likhein.";
+    var STORAGE_KEY = "khanago_merchant_step2_v1";
+    var state = {
+      online: true,
+      onboarded: false,
+      shopName: "",
+      ownerName: "",
+      ownerPhone: "",
+      bankAcc: "",
+      fssaiNo: "",
+      logo: "",
+      docImg: ""
+    };
+
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          for (var key in parsed) {
+            state[key] = parsed[key];
+          }
+        }
+      }
+    } catch (e) {}
+
+    function persist() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function setImg(el, src) {
+      if (!el) return;
+      if (src) {
+        el.src = src;
+        el.style.display = "block";
+      } else {
+        el.style.display = "none";
+      }
+    }
+
+    function showView() {
+      var setupView = document.getElementById("setupView");
+      var dashView = document.getElementById("dashView");
+      if (state.onboarded) {
+        setupView.style.display = "none";
+        dashView.style.display = "block";
+      } else {
+        setupView.style.display = "block";
+        dashView.style.display = "none";
+      }
+    }
+
+    function renderAll() {
+      var statusBtn = document.getElementById("statusBtn");
+      if (state.online) {
+        statusBtn.textContent = "SHOP: ONLINE";
+        statusBtn.className = "status-btn online";
+      } else {
+        statusBtn.textContent = "SHOP: OFFLINE";
+        statusBtn.className = "status-btn offline";
+      }
+
+      document.getElementById("shopName").value = state.shopName || "";
+      document.getElementById("ownerName").value = state.ownerName || "";
+      document.getElementById("ownerPhone").value = state.ownerPhone || "";
+      document.getElementById("bankAcc").value = state.bankAcc || "";
+      document.getElementById("fssaiNo").value = state.fssaiNo || "";
+
+      setImg(document.getElementById("topLogo"), state.logo);
+      setImg(document.getElementById("prevLogo"), state.logo);
+      setImg(document.getElementById("prevDoc"), state.docImg);
+      setImg(document.getElementById("dashLogoImg"), state.logo);
+      setImg(document.getElementById("dashDocImg"), state.docImg);
+
+      document.getElementById("dashTitle").textContent = (state.shopName || "Merchant") + " Dashboard";
+      document.getElementById("summaryBox").innerHTML =
+        "<strong>Shop Name:</strong> " + (state.shopName || "-") + "<br>" +
+        "<strong>Owner:</strong> " + (state.ownerName || "-") + " (" + (state.ownerPhone || "-") + ")<br>" +
+        "<strong>Bank Account:</strong> " + (state.bankAcc || "-") + "<br>" +
+        "<strong>FSSAI Licence:</strong> " + (state.fssaiNo || "-") + "<br>" +
+        "<strong>Shop Status:</strong> " + (state.online ? "ONLINE" : "OFFLINE");
+
+      showView();
+    }
+
+    document.getElementById("statusBtn").addEventListener("click", function () {
+      state.online = !state.online;
+      persist();
+      renderAll();
+    });
+
+    function attachFile(inputId, propName) {
+      document.getElementById(inputId).addEventListener("change", function (ev) {
+        var file = ev.target.files && ev.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          state[propName] = e.target.result;
+          persist();
+          renderAll();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    attachFile("logoFile", "logo");
+    attachFile("docFile", "docImg");
+
+    document.getElementById("saveBtn").addEventListener("click", function () {
+      var sName = document.getElementById("shopName").value.trim();
+      var oName = document.getElementById("ownerName").value.trim();
+      var oPhone = document.getElementById("ownerPhone").value.trim();
+      var bAcc = document.getElementById("bankAcc").value.trim();
+      var fssai = document.getElementById("fssaiNo").value.trim();
+      var err = document.getElementById("errMsg");
+
+      if (!sName || !oName || !oPhone || !bAcc || !fssai) {
+        err.textContent = "Kripya sabhi zaroori details bharein.";
         return;
       }
-      out.style.display = "block";
-      out.textContent = "Saved Shop: " + val;
+
+      err.textContent = "";
+      state.shopName = sName;
+      state.ownerName = oName;
+      state.ownerPhone = oPhone;
+      state.bankAcc = bAcc;
+      state.fssaiNo = fssai;
+      state.onboarded = true;
+      persist();
+      renderAll();
     });
+
+    document.getElementById("editBtn").addEventListener("click", function () {
+      state.onboarded = false;
+      persist();
+      showView();
+    });
+
+    renderAll();
   </script>
 </body>
 </html>
