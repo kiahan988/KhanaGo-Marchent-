@@ -9,7 +9,7 @@
     body { margin: 0; background: #f8fafc; color: #0f172a; padding: 14px; }
     .wrap { max-width: 820px; margin: 0 auto; }
 
-    .top { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; position: sticky; top: 8px; z-index: 20; }
+    .top { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
     .top-left { display: flex; align-items: center; gap: 8px; }
     .icon-btn { border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 10px; width: 38px; height: 38px; font-size: 18px; font-weight: 800; cursor: pointer; }
     .brand { font-size: 18px; font-weight: 900; }
@@ -31,7 +31,7 @@
     .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
     h2, h3 { margin: 0 0 12px; font-size: 18px; font-weight: 900; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 14px; }
     @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
 
     .field { margin-bottom: 12px; }
@@ -39,11 +39,11 @@
     input[type="text"], input[type="tel"], input[type="number"], select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; }
     .prev { width: 78px; height: 62px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 6px; display: none; }
 
-    .primary-btn { border: none; padding: 12px 16px; border-radius: 10px; background: #ea580c; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; }
+    .primary-btn { border: none; padding: 11px 15px; border-radius: 10px; background: #ea580c; color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; }
     .sec-btn { border: 1px solid #cbd5e1; background: #fff; color: #0f172a; padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; }
 
     .stat { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; }
-    .stat-val { font-size: 24px; font-weight: 900; margin-top: 4px; }
+    .stat-val { font-size: 22px; font-weight: 900; margin-top: 4px; }
 
     .info-box { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 1.65; }
     .docs-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
@@ -68,7 +68,6 @@
       </div>
     </div>
 
-    <!-- SIDE DRAWER (NO POS) -->
     <div id="drawerBackdrop">
       <aside id="drawerBox" class="drawer">
         <div class="drawer-head">
@@ -87,7 +86,6 @@
       </aside>
     </div>
 
-    <!-- SETUP VIEW -->
     <div id="setupView" class="card">
       <h2>khanaGo Merchant Onboarding</h2>
 
@@ -135,7 +133,6 @@
       <div id="errMsg" style="margin-top:8px;color:#dc2626;font-size:13px;font-weight:700;"></div>
     </div>
 
-    <!-- DASHBOARD VIEW -->
     <div id="dashView" class="card" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
         <h3 id="dashTitle" style="margin:0;">Merchant Dashboard</h3>
@@ -147,11 +144,11 @@
 
       <div class="grid-3">
         <div class="stat">
-          <div style="font-size:11px;font-weight:800;color:#64748b;">ACTIVE ORDERS</div>
+          <div style="font-size:11px;font-weight:800;color:#64748b;">TOTAL ORDERS</div>
           <div id="statOrders" class="stat-val">0</div>
         </div>
         <div class="stat">
-          <div style="font-size:11px;font-weight:800;color:#64748b;">ACTIVE MENU ITEMS</div>
+          <div style="font-size:11px;font-weight:800;color:#64748b;">ACTIVE ITEMS</div>
           <div id="statItems" class="stat-val">0</div>
         </div>
         <div class="stat">
@@ -167,7 +164,6 @@
       </div>
     </div>
 
-    <!-- ORDERS VIEW -->
     <div id="ordersView" class="card" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
         <h3 style="margin:0;">Orders</h3>
@@ -176,7 +172,6 @@
       <div id="ordersList"></div>
     </div>
 
-    <!-- ITEMS & MENU VIEW -->
     <div id="itemsView" class="card" style="display:none;">
       <h3>Menu Items</h3>
       <div class="grid-2">
@@ -193,7 +188,6 @@
       <div id="itemsList"></div>
     </div>
 
-    <!-- WALLET / SETTINGS VIEW -->
     <div id="extraView" class="card" style="display:none;">
       <h3 id="extraTitle">Details</h3>
       <div id="extraBody" class="info-box"></div>
@@ -201,242 +195,231 @@
   </div>
 
   <script>
-    var STORAGE_KEY = "khanago_merchant_step3_v1";
-    var state = {
-      online: true,
-      onboarded: false,
-      activeTab: "dashboard",
-      shopName: "",
-      ownerName: "",
-      ownerPhone: "",
-      bankAcc: "",
-      fssaiNo: "",
-      logo: "",
-      docImg: "",
-      items: [
-        { id: 1, name: "Special Thali", price: 120, active: true },
-        { id: 2, name: "Paneer Paratha", price: 80, active: true }
-      ],
-      orders: []
-    };
+    (function () {
+      var STORAGE_KEY = "khanago_merchant_step3_fixed";
+      var state = {
+        online: true,
+        onboarded: false,
+        activeTab: "dashboard",
+        shopName: "",
+        ownerName: "",
+        ownerPhone: "",
+        bankAcc: "",
+        fssaiNo: "",
+        logo: "",
+        docImg: "",
+        items: [
+          { id: 1, name: "Special Thali", price: 120, active: true },
+          { id: 2, name: "Paneer Paratha", price: 80, active: true }
+        ],
+        orders: []
+      };
 
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        var parsed = JSON.parse(raw);
-        if (parsed && typeof parsed === "object") {
-          for (var key in parsed) {
-            state[key] = parsed[key];
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === "object") {
+            if (typeof parsed.online === "boolean") state.online = parsed.online;
+            if (typeof parsed.onboarded === "boolean") state.onboarded = parsed.onboarded;
+            if (typeof parsed.activeTab === "string") state.activeTab = parsed.activeTab;
+            if (typeof parsed.shopName === "string") state.shopName = parsed.shopName;
+            if (typeof parsed.ownerName === "string") state.ownerName = parsed.ownerName;
+            if (typeof parsed.ownerPhone === "string") state.ownerPhone = parsed.ownerPhone;
+            if (typeof parsed.bankAcc === "string") state.bankAcc = parsed.bankAcc;
+            if (typeof parsed.fssaiNo === "string") state.fssaiNo = parsed.fssaiNo;
+            if (typeof parsed.logo === "string") state.logo = parsed.logo;
+            if (typeof parsed.docImg === "string") state.docImg = parsed.docImg;
+            if (Array.isArray(parsed.items) && parsed.items.length) state.items = parsed.items;
+            if (Array.isArray(parsed.orders)) state.orders = parsed.orders;
+          }
+        }
+      } catch (e) {}
+
+      function persist() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {}
+      }
+
+      function playBuzzer(showAlert) {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) {
+            var ctx = new AC();
+            var now = ctx.currentTime;
+            var times = [0, 0.25, 0.5];
+            for (var i = 0; i < times.length; i++) {
+              var osc = ctx.createOscillator();
+              var gain = ctx.createGain();
+              osc.type = "sawtooth";
+              osc.frequency.setValueAtTime(760, now + times[i]);
+              gain.gain.setValueAtTime(0.2, now + times[i]);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + 0.19);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(now + times[i]);
+              osc.stop(now + times[i] + 0.2);
+            }
+          }
+        } catch (e) {}
+        if (showAlert) {
+          alert("🔔 Order Buzzer Played!");
+        }
+      }
+
+      function setImg(el, src) {
+        if (!el) return;
+        if (src) {
+          el.src = src;
+          el.style.display = "block";
+        } else {
+          el.style.display = "none";
+        }
+      }
+
+      function applyView() {
+        document.getElementById("setupView").style.display = "none";
+        document.getElementById("dashView").style.display = "none";
+        document.getElementById("ordersView").style.display = "none";
+        document.getElementById("itemsView").style.display = "none";
+        document.getElementById("extraView").style.display = "none";
+
+        var tab = state.onboarded ? state.activeTab : "onboarding";
+        if (tab === "onboarding") {
+          document.getElementById("setupView").style.display = "block";
+        } else if (tab === "orders") {
+          document.getElementById("ordersView").style.display = "block";
+        } else if (tab === "items") {
+          document.getElementById("itemsView").style.display = "block";
+        } else if (tab === "wallet" || tab === "settings") {
+          var total = 0;
+          for (var i = 0; i < state.orders.length; i++) {
+            if (state.orders[i].status !== "Cancelled") total += Number(state.orders[i].amount || 0);
+          }
+          document.getElementById("extraView").style.display = "block";
+          document.getElementById("extraTitle").textContent = tab === "wallet" ? "Wallet & Payout" : "Merchant Settings";
+          document.getElementById("extraBody").innerHTML =
+            "<strong>Shop:</strong> " + (state.shopName || "-") + "<br>" +
+            "<strong>Bank Account:</strong> " + (state.bankAcc || "-") + "<br>" +
+            "<strong>FSSAI Licence:</strong> " + (state.fssaiNo || "-") + "<br>" +
+            "<strong>Total Earnings:</strong> ₹" + total;
+        } else {
+          document.getElementById("dashView").style.display = "block";
+        }
+
+        var navBtns = document.querySelectorAll(".menu-item-btn");
+        for (var j = 0; j < navBtns.length; j++) {
+          if (navBtns[j].getAttribute("data-tab") === tab) {
+            navBtns[j].classList.add("active");
+          } else {
+            navBtns[j].classList.remove("active");
           }
         }
       }
-    } catch (e) {}
 
-    function persist() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (e) {}
-    }
+      function renderOrders() {
+        var box = document.getElementById("ordersList");
+        if (!state.orders.length) {
+          box.innerHTML = "<div class='info-box'>Abhi koi order nahi aaya hai. '+ Test Order (Buzzer)' dabayein.</div>";
+          return;
+        }
+        var statuses = ["New", "Preparing", "Ready", "Completed", "Cancelled"];
+        var html = "";
+        for (var i = 0; i < state.orders.length; i++) {
+          var ord = state.orders[i];
+          var opts = "";
+          for (var s = 0; s < statuses.length; s++) {
+            var st = statuses[s];
+            opts += "<option value='" + st + "'" + (ord.status === st ? " selected" : "") + ">" + st + "</option>";
+          }
+          html +=
+            "<div class='row-card'>" +
+              "<div><strong>Order #" + ord.id + " • ₹" + ord.amount + "</strong><div style='font-size:12px;color:#64748b;'>" + ord.item + "</div></div>" +
+              "<select class='ord-status-sel' data-id='" + ord.id + "' style='width:auto;'>" + opts + "</select>" +
+            "</div>";
+        }
+        box.innerHTML = html;
 
-    function playBuzzer(showAlert) {
-      try {
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) {
-          var ctx = new AC();
-          var now = ctx.currentTime;
-          [0, 0.25, 0.5].forEach(function (offset) {
-            var osc = ctx.createOscillator();
-            var gain = ctx.createGain();
-            osc.type = "sawtooth";
-            osc.frequency.setValueAtTime(760, now + offset);
-            gain.gain.setValueAtTime(0.2, now + offset);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.19);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now + offset);
-            osc.stop(now + offset + 0.2);
+        var selects = box.querySelectorAll(".ord-status-sel");
+        for (var k = 0; k < selects.length; k++) {
+          selects[k].addEventListener("change", function () {
+            var oid = Number(this.getAttribute("data-id"));
+            var val = this.value;
+            for (var m = 0; m < state.orders.length; m++) {
+              if (state.orders[m].id === oid) {
+                state.orders[m].status = val;
+                break;
+              }
+            }
+            persist();
+            renderAll();
           });
         }
-      } catch (e) {}
-      if (showAlert) alert("🔔 Order Buzzer Played!");
-    }
-
-    function setImg(el, src) {
-      if (!el) return;
-      if (src) {
-        el.src = src;
-        el.style.display = "block";
-      } else {
-        el.style.display = "none";
       }
-    }
 
-    function switchTab(tabName) {
-      state.activeTab = tabName;
-      persist();
-
-      document.getElementById("setupView").style.display = "none";
-      document.getElementById("dashView").style.display = "none";
-      document.getElementById("ordersView").style.display = "none";
-      document.getElementById("itemsView").style.display = "none";
-      document.getElementById("extraView").style.display = "none";
-
-      if (!state.onboarded || tabName === "onboarding") {
-        document.getElementById("setupView").style.display = "block";
-      } else if (tabName === "orders") {
-        document.getElementById("ordersView").style.display = "block";
-      } else if (tabName === "items") {
-        document.getElementById("itemsView").style.display = "block";
-      } else if (tabName === "wallet" || tabName === "settings") {
-        var total = 0;
-        for (var i = 0; i < state.orders.length; i++) {
-          if (state.orders[i].status !== "Cancelled") total += Number(state.orders[i].amount || 0);
+      function renderItems() {
+        var box = document.getElementById("itemsList");
+        var html = "";
+        for (var i = 0; i < state.items.length; i++) {
+          var it = state.items[i];
+          html +=
+            "<div class='row-card'>" +
+              "<div><strong>" + it.name + "</strong><div style='font-size:12px;color:#ea580c;font-weight:800;'>₹" + it.price + "</div></div>" +
+              "<button type='button' class='item-toggle-btn " + (it.active ? "item-on" : "item-off") + "' data-id='" + it.id + "'>" + (it.active ? "ON" : "OFF") + "</button>" +
+            "</div>";
         }
-        document.getElementById("extraView").style.display = "block";
-        document.getElementById("extraTitle").textContent = tabName === "wallet" ? "Wallet & Payout" : "Merchant Settings";
-        document.getElementById("extraBody").innerHTML =
-          "<strong>Shop:</strong> " + (state.shopName || "-") + "<br>" +
-          "<strong>Bank Account:</strong> " + (state.bankAcc || "-") + "<br>" +
-          "<strong>FSSAI Licence:</strong> " + (state.fssaiNo || "-") + "<br>" +
-          "<strong>Total Earnings:</strong> ₹" + total;
-      } else {
-        document.getElementById("dashView").style.display = "block";
+        box.innerHTML = html;
+
+        var btns = box.querySelectorAll(".item-toggle-btn");
+        for (var j = 0; j < btns.length; j++) {
+          btns[j].addEventListener("click", function () {
+            var iid = Number(this.getAttribute("data-id"));
+            for (var k = 0; k < state.items.length; k++) {
+              if (state.items[k].id === iid) {
+                state.items[k].active = !state.items[k].active;
+                break;
+              }
+            }
+            persist();
+            renderAll();
+          });
+        }
       }
 
-      var navBtns = document.querySelectorAll(".menu-item-btn");
-      for (var j = 0; j < navBtns.length; j++) {
-        if (navBtns[j].getAttribute("data-tab") === tabName) {
-          navBtns[j].classList.add("active");
+      function renderAll() {
+        var statusBtn = document.getElementById("statusBtn");
+        if (state.online) {
+          statusBtn.textContent = "SHOP: ONLINE";
+          statusBtn.className = "status-btn online";
         } else {
-          navBtns[j].classList.remove("active");
+          statusBtn.textContent = "SHOP: OFFLINE";
+          statusBtn.className = "status-btn offline";
         }
-      }
-    }
 
-    function renderOrders() {
-      var box = document.getElementById("ordersList");
-      if (!state.orders.length) {
-        box.innerHTML = "<div class='info-box'>Abhi koi order nahi aaya hai. '+ Test Order (Buzzer)' dabayein.</div>";
-        return;
-      }
-      var statuses = ["New", "Preparing", "Ready", "Completed", "Cancelled"];
-      var html = "";
-      for (var i = 0; i < state.orders.length; i++) {
-        var ord = state.orders[i];
-        var opts = "";
-        for (var s = 0; s < statuses.length; s++) {
-          var st = statuses[s];
-          opts += "<option value='" + st + "'" + (ord.status === st ? " selected" : "") + ">" + st + "</option>";
+        document.getElementById("drawerTitle").textContent = state.shopName || "khanaGo Merchant";
+        document.getElementById("shopName").value = state.shopName || "";
+        document.getElementById("ownerName").value = state.ownerName || "";
+        document.getElementById("ownerPhone").value = state.ownerPhone || "";
+        document.getElementById("bankAcc").value = state.bankAcc || "";
+        document.getElementById("fssaiNo").value = state.fssaiNo || "";
+
+        setImg(document.getElementById("topLogo"), state.logo);
+        setImg(document.getElementById("prevLogo"), state.logo);
+        setImg(document.getElementById("prevDoc"), state.docImg);
+        setImg(document.getElementById("dashLogoImg"), state.logo);
+        setImg(document.getElementById("dashDocImg"), state.docImg);
+
+        var activeItemsCount = 0;
+        for (var i = 0; i < state.items.length; i++) {
+          if (state.items[i].active) activeItemsCount++;
         }
-        html +=
-          "<div class='row-card'>" +
-            "<div><strong>Order #" + ord.id + " • ₹" + ord.amount + "</strong><div style='font-size:12px;color:#64748b;'>" + ord.item + "</div></div>" +
-            "<select class='ord-status-sel' data-id='" + ord.id + "' style='width:auto;'>" + opts + "</select>" +
-          "</div>";
-      }
-      box.innerHTML = html;
 
-      var selects = box.querySelectorAll(".ord-status-sel");
-      for (var k = 0; k < selects.length; k++) {
-        selects[k].addEventListener("change", function () {
-          var oid = Number(this.getAttribute("data-id"));
-          var val = this.value;
-          for (var m = 0; m < state.orders.length; m++) {
-            if (state.orders[m].id === oid) {
-              state.orders[m].status = val;
-              break;
-            }
-          }
-          persist();
-          renderAll();
-        });
-      }
-    }
+        var payout = 0;
+        for (var j = 0; j < state.orders.length; j++) {
+          if (state.orders[j].status !== "Cancelled") payout += Number(state.orders[j].amount || 0);
+        }
 
-    function renderItems() {
-      var box = document.getElementById("itemsList");
-      var html = "";
-      for (var i = 0; i < state.items.length; i++) {
-        var it = state.items[i];
-        html +=
-          "<div class='row-card'>" +
-            "<div><strong>" + it.name + "</strong><div style='font-size:12px;color:#ea580c;font-weight:800;'>₹" + it.price + "</div></div>" +
-            "<button type='button' class='item-toggle-btn " + (it.active ? "item-on" : "item-off") + "' data-id='" + it.id + "'>" + (it.active ? "ON" : "OFF") + "</button>" +
-          "</div>";
-      }
-      box.innerHTML = html;
-
-      var btns = box.querySelectorAll(".item-toggle-btn");
-      for (var j = 0; j < btns.length; j++) {
-        btns[j].addEventListener("click", function () {
-          var iid = Number(this.getAttribute("data-id"));
-          for (var k = 0; k < state.items.length; k++) {
-            if (state.items[k].id === iid) {
-              state.items[k].active = !state.items[k].active;
-              break;
-            }
-          }
-          persist();
-          renderAll();
-        });
-      }
-    }
-
-    function renderAll() {
-      var statusBtn = document.getElementById("statusBtn");
-      if (state.online) {
-        statusBtn.textContent = "SHOP: ONLINE";
-        statusBtn.className = "status-btn online";
-      } else {
-        statusBtn.textContent = "SHOP: OFFLINE";
-        statusBtn.className = "status-btn offline";
-      }
-
-      document.getElementById("drawerTitle").textContent = state.shopName || "khanaGo Merchant";
-      document.getElementById("shopName").value = state.shopName || "";
-      document.getElementById("ownerName").value = state.ownerName || "";
-      document.getElementById("ownerPhone").value = state.ownerPhone || "";
-      document.getElementById("bankAcc").value = state.bankAcc || "";
-      document.getElementById("fssaiNo").value = state.fssaiNo || "";
-
-      setImg(document.getElementById("topLogo"), state.logo);
-      setImg(document.getElementById("prevLogo"), state.logo);
-      setImg(document.getElementById("prevDoc"), state.docImg);
-      setImg(document.getElementById("dashLogoImg"), state.logo);
-      setImg(document.getElementById("dashDocImg"), state.docImg);
-
-      var activeItemsCount = 0;
-      for (var i = 0; i < state.items.length; i++) {
-        if (state.items[i].active) activeItemsCount++;
-      }
-
-      var payout = 0;
-      for (var j = 0; j < state.orders.length; j++) {
-        if (state.orders[j].status !== "Cancelled") payout += Number(state.orders[j].amount || 0);
-      }
-
-      document.getElementById("statOrders").textContent = state.orders.length;
-      document.getElementById("statItems").textContent = activeItemsCount;
-      document.getElementById("statPayout").textContent = "₹" + payout;
-
-      document.getElementById("dashTitle").textContent = (state.shopName || "Merchant") + " Dashboard";
-      document.getElementById("summaryBox").innerHTML =
-        "<strong>Shop Name:</strong> " + (state.shopName || "-") + "<br>" +
-        "<strong>Owner:</strong> " + (state.ownerName || "-") + " (" + (state.ownerPhone || "-") + ")<br>" +
-        "<strong>Bank Account:</strong> " + (state.bankAcc || "-") + "<br>" +
-        "<strong>FSSAI Licence:</strong> " + (state.fssaiNo || "-") + "<br>" +
-        "<strong>Shop Status:</strong> " + (state.online ? "ONLINE" : "OFFLINE");
-
-      renderOrders();
-      renderItems();
-      switchTab(state.onboarded ? state.activeTab : "onboarding");
-    }
-
-    document.getElementById("menuOpenBtn").addEventListener("click", function () {
-      document.getElementById("drawerBackdrop").style.display = "block";
-    });
-    document.getElementById("menuCloseBtn").addEventListener("click", function () {
-      document.getElementById("drawerBackdrop").style.display = "none";
-    });
-    document.getElementById("drawerBackdrop").addEventListener("click", function (e) {
-      if (e.target.id === "drawerBac
+        document.getElementById("statOrders").textContent = state.orders.length;
+        document.getElementById("statItems").textContent = activeItemsCount;
+        document.getElementById("statPayout").textContent = "₹" + payo
