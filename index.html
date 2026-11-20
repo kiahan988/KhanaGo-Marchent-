@@ -7,47 +7,87 @@
   <style>
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
     body { margin: 0; background: #f8fafc; color: #0f172a; padding: 14px; }
-    .wrap { max-width: 720px; margin: 0 auto; }
+    .wrap { max-width: 820px; margin: 0 auto; }
 
-    .top { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
-    .brand { font-size: 19px; font-weight: 900; }
+    .top { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; position: sticky; top: 8px; z-index: 20; }
+    .top-left { display: flex; align-items: center; gap: 8px; }
+    .icon-btn { border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 10px; width: 38px; height: 38px; font-size: 18px; font-weight: 800; cursor: pointer; }
+    .brand { font-size: 18px; font-weight: 900; }
     .brand span { color: #ea580c; }
-    .top-right { display: flex; align-items: center; gap: 8px; }
-    .status-btn { border: none; padding: 9px 14px; border-radius: 999px; font-size: 12px; font-weight: 900; cursor: pointer; }
+    .top-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .buzzer-btn { border: 1px solid #f59e0b; background: #fef3c7; color: #92400e; padding: 8px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; cursor: pointer; }
+    .status-btn { border: none; padding: 9px 13px; border-radius: 999px; font-size: 12px; font-weight: 900; cursor: pointer; }
     .online { background: #dcfce7; color: #166534; }
     .offline { background: #fee2e2; color: #991b1b; }
-    .mini-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #fdba74; background: #ffedd5; display: none; }
+    .mini-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #fdba74; background: #ffedd5; display: none; cursor: pointer; }
+
+    #drawerBackdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 50; }
+    .drawer { width: 270px; max-width: 82vw; height: 100%; background: #fff; padding: 14px; overflow-y: auto; }
+    .drawer-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 10px; }
+    .menu-item-btn { width: 100%; text-align: left; background: none; border: none; padding: 10px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; color: #1e293b; cursor: pointer; margin-bottom: 4px; }
+    .menu-item-btn.active { background: #ffedd5; color: #c2410c; font-weight: 800; }
 
     .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
     h2, h3 { margin: 0 0 12px; font-size: 18px; font-weight: 900; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 14px; }
     @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+
     .field { margin-bottom: 12px; }
     label { display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 4px; }
-    input[type="text"], input[type="tel"] { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; }
+    input[type="text"], input[type="tel"], input[type="number"], select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; }
     .prev { width: 78px; height: 62px; object-fit: cover; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 6px; display: none; }
 
-    .primary-btn { width: 100%; border: none; padding: 13px; border-radius: 10px; background: #ea580c; color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+    .primary-btn { border: none; padding: 12px 16px; border-radius: 10px; background: #ea580c; color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; }
     .sec-btn { border: 1px solid #cbd5e1; background: #fff; color: #0f172a; padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; }
 
-    #dashView { display: none; }
-    .dash-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .stat { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; }
+    .stat-val { font-size: 24px; font-weight: 900; margin-top: 4px; }
+
     .info-box { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 1.65; }
     .docs-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
     .doc-thumb { width: 84px; height: 68px; object-fit: cover; border-radius: 8px; border: 1px solid #fdba74; display: none; }
+
+    .row-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; background: #fff; }
+    .item-on { background: #dcfce7; color: #166534; border: none; padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; cursor: pointer; }
+    .item-off { background: #e2e8f0; color: #475569; border: none; padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
-      <div class="brand">khana<span>Go</span> <span style="font-size:12px;color:#64748b;font-weight:700;">Merchant</span></div>
+      <div class="top-left">
+        <button id="menuOpenBtn" type="button" class="icon-btn">☰</button>
+        <div class="brand">khana<span>Go</span></div>
+      </div>
       <div class="top-right">
+        <button id="buzzerBtn" type="button" class="buzzer-btn">🔔 Buzzer</button>
         <button id="statusBtn" type="button" class="status-btn online">SHOP: ONLINE</button>
         <img id="topLogo" class="mini-logo" alt="Logo" />
       </div>
     </div>
 
-    <!-- SETUP / ONBOARDING VIEW -->
+    <!-- SIDE DRAWER (NO POS) -->
+    <div id="drawerBackdrop">
+      <aside id="drawerBox" class="drawer">
+        <div class="drawer-head">
+          <div>
+            <div id="drawerTitle" style="font-weight:900;font-size:15px;">khanaGo Merchant</div>
+            <div style="font-size:11px;color:#64748b;">Partner Panel</div>
+          </div>
+          <button id="menuCloseBtn" type="button" class="icon-btn">&times;</button>
+        </div>
+        <button type="button" class="menu-item-btn active" data-tab="dashboard">📊 Dashboard</button>
+        <button type="button" class="menu-item-btn" data-tab="onboarding">🏪 Shop Onboarding & Docs</button>
+        <button type="button" class="menu-item-btn" data-tab="orders">🛍️ Orders</button>
+        <button type="button" class="menu-item-btn" data-tab="items">📦 Items & Menu</button>
+        <button type="button" class="menu-item-btn" data-tab="wallet">💳 Wallet & Payout</button>
+        <button type="button" class="menu-item-btn" data-tab="settings">⚙️ Settings</button>
+      </aside>
+    </div>
+
+    <!-- SETUP VIEW -->
     <div id="setupView" class="card">
       <h2>khanaGo Merchant Onboarding</h2>
 
@@ -91,36 +131,93 @@
         </div>
       </div>
 
-      <button id="saveBtn" type="button" class="primary-btn">Save & Open Dashboard</button>
+      <button id="saveBtn" type="button" class="primary-btn" style="width:100%;">Save & Open Dashboard</button>
       <div id="errMsg" style="margin-top:8px;color:#dc2626;font-size:13px;font-weight:700;"></div>
     </div>
 
-    <!-- DASHBOARD VIEW (SHOWN AFTER SAVE) -->
-    <div id="dashView" class="card">
-      <div class="dash-head">
+    <!-- DASHBOARD VIEW -->
+    <div id="dashView" class="card" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
         <h3 id="dashTitle" style="margin:0;">Merchant Dashboard</h3>
-        <button id="editBtn" type="button" class="sec-btn">Edit Shop / Docs</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="simOrderBtn" type="button" class="primary-btn">+ Test Order (Buzzer)</button>
+          <button id="editBtn" type="button" class="sec-btn">Edit Shop / Docs</button>
+        </div>
       </div>
+
+      <div class="grid-3">
+        <div class="stat">
+          <div style="font-size:11px;font-weight:800;color:#64748b;">ACTIVE ORDERS</div>
+          <div id="statOrders" class="stat-val">0</div>
+        </div>
+        <div class="stat">
+          <div style="font-size:11px;font-weight:800;color:#64748b;">ACTIVE MENU ITEMS</div>
+          <div id="statItems" class="stat-val">0</div>
+        </div>
+        <div class="stat">
+          <div style="font-size:11px;font-weight:800;color:#64748b;">PAYOUT TOTAL</div>
+          <div id="statPayout" class="stat-val">₹0</div>
+        </div>
+      </div>
+
       <div id="summaryBox" class="info-box"></div>
       <div class="docs-row">
         <img id="dashLogoImg" class="doc-thumb" alt="Shop Logo" />
         <img id="dashDocImg" class="doc-thumb" alt="Doc Image" />
       </div>
     </div>
+
+    <!-- ORDERS VIEW -->
+    <div id="ordersView" class="card" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+        <h3 style="margin:0;">Orders</h3>
+        <button id="simOrderBtn2" type="button" class="primary-btn">+ Test Order (Buzzer)</button>
+      </div>
+      <div id="ordersList"></div>
+    </div>
+
+    <!-- ITEMS & MENU VIEW -->
+    <div id="itemsView" class="card" style="display:none;">
+      <h3>Menu Items</h3>
+      <div class="grid-2">
+        <div class="field">
+          <label>Item Name *</label>
+          <input type="text" id="newItemName" placeholder="e.g. Paneer Thali" />
+        </div>
+        <div class="field">
+          <label>Price (₹) *</label>
+          <input type="number" id="newItemPrice" min="1" placeholder="e.g. 120" />
+        </div>
+      </div>
+      <button id="addItemBtn" type="button" class="primary-btn" style="margin-bottom:14px;">+ Add Menu Item</button>
+      <div id="itemsList"></div>
+    </div>
+
+    <!-- WALLET / SETTINGS VIEW -->
+    <div id="extraView" class="card" style="display:none;">
+      <h3 id="extraTitle">Details</h3>
+      <div id="extraBody" class="info-box"></div>
+    </div>
   </div>
 
   <script>
-    var STORAGE_KEY = "khanago_merchant_step2_v1";
+    var STORAGE_KEY = "khanago_merchant_step3_v1";
     var state = {
       online: true,
       onboarded: false,
+      activeTab: "dashboard",
       shopName: "",
       ownerName: "",
       ownerPhone: "",
       bankAcc: "",
       fssaiNo: "",
       logo: "",
-      docImg: ""
+      docImg: "",
+      items: [
+        { id: 1, name: "Special Thali", price: 120, active: true },
+        { id: 2, name: "Paneer Paratha", price: 80, active: true }
+      ],
+      orders: []
     };
 
     try {
@@ -141,6 +238,29 @@
       } catch (e) {}
     }
 
+    function playBuzzer(showAlert) {
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) {
+          var ctx = new AC();
+          var now = ctx.currentTime;
+          [0, 0.25, 0.5].forEach(function (offset) {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(760, now + offset);
+            gain.gain.setValueAtTime(0.2, now + offset);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.19);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + offset);
+            osc.stop(now + offset + 0.2);
+          });
+        }
+      } catch (e) {}
+      if (showAlert) alert("🔔 Order Buzzer Played!");
+    }
+
     function setImg(el, src) {
       if (!el) return;
       if (src) {
@@ -151,15 +271,114 @@
       }
     }
 
-    function showView() {
-      var setupView = document.getElementById("setupView");
-      var dashView = document.getElementById("dashView");
-      if (state.onboarded) {
-        setupView.style.display = "none";
-        dashView.style.display = "block";
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+      persist();
+
+      document.getElementById("setupView").style.display = "none";
+      document.getElementById("dashView").style.display = "none";
+      document.getElementById("ordersView").style.display = "none";
+      document.getElementById("itemsView").style.display = "none";
+      document.getElementById("extraView").style.display = "none";
+
+      if (!state.onboarded || tabName === "onboarding") {
+        document.getElementById("setupView").style.display = "block";
+      } else if (tabName === "orders") {
+        document.getElementById("ordersView").style.display = "block";
+      } else if (tabName === "items") {
+        document.getElementById("itemsView").style.display = "block";
+      } else if (tabName === "wallet" || tabName === "settings") {
+        var total = 0;
+        for (var i = 0; i < state.orders.length; i++) {
+          if (state.orders[i].status !== "Cancelled") total += Number(state.orders[i].amount || 0);
+        }
+        document.getElementById("extraView").style.display = "block";
+        document.getElementById("extraTitle").textContent = tabName === "wallet" ? "Wallet & Payout" : "Merchant Settings";
+        document.getElementById("extraBody").innerHTML =
+          "<strong>Shop:</strong> " + (state.shopName || "-") + "<br>" +
+          "<strong>Bank Account:</strong> " + (state.bankAcc || "-") + "<br>" +
+          "<strong>FSSAI Licence:</strong> " + (state.fssaiNo || "-") + "<br>" +
+          "<strong>Total Earnings:</strong> ₹" + total;
       } else {
-        setupView.style.display = "block";
-        dashView.style.display = "none";
+        document.getElementById("dashView").style.display = "block";
+      }
+
+      var navBtns = document.querySelectorAll(".menu-item-btn");
+      for (var j = 0; j < navBtns.length; j++) {
+        if (navBtns[j].getAttribute("data-tab") === tabName) {
+          navBtns[j].classList.add("active");
+        } else {
+          navBtns[j].classList.remove("active");
+        }
+      }
+    }
+
+    function renderOrders() {
+      var box = document.getElementById("ordersList");
+      if (!state.orders.length) {
+        box.innerHTML = "<div class='info-box'>Abhi koi order nahi aaya hai. '+ Test Order (Buzzer)' dabayein.</div>";
+        return;
+      }
+      var statuses = ["New", "Preparing", "Ready", "Completed", "Cancelled"];
+      var html = "";
+      for (var i = 0; i < state.orders.length; i++) {
+        var ord = state.orders[i];
+        var opts = "";
+        for (var s = 0; s < statuses.length; s++) {
+          var st = statuses[s];
+          opts += "<option value='" + st + "'" + (ord.status === st ? " selected" : "") + ">" + st + "</option>";
+        }
+        html +=
+          "<div class='row-card'>" +
+            "<div><strong>Order #" + ord.id + " • ₹" + ord.amount + "</strong><div style='font-size:12px;color:#64748b;'>" + ord.item + "</div></div>" +
+            "<select class='ord-status-sel' data-id='" + ord.id + "' style='width:auto;'>" + opts + "</select>" +
+          "</div>";
+      }
+      box.innerHTML = html;
+
+      var selects = box.querySelectorAll(".ord-status-sel");
+      for (var k = 0; k < selects.length; k++) {
+        selects[k].addEventListener("change", function () {
+          var oid = Number(this.getAttribute("data-id"));
+          var val = this.value;
+          for (var m = 0; m < state.orders.length; m++) {
+            if (state.orders[m].id === oid) {
+              state.orders[m].status = val;
+              break;
+            }
+          }
+          persist();
+          renderAll();
+        });
+      }
+    }
+
+    function renderItems() {
+      var box = document.getElementById("itemsList");
+      var html = "";
+      for (var i = 0; i < state.items.length; i++) {
+        var it = state.items[i];
+        html +=
+          "<div class='row-card'>" +
+            "<div><strong>" + it.name + "</strong><div style='font-size:12px;color:#ea580c;font-weight:800;'>₹" + it.price + "</div></div>" +
+            "<button type='button' class='item-toggle-btn " + (it.active ? "item-on" : "item-off") + "' data-id='" + it.id + "'>" + (it.active ? "ON" : "OFF") + "</button>" +
+          "</div>";
+      }
+      box.innerHTML = html;
+
+      var btns = box.querySelectorAll(".item-toggle-btn");
+      for (var j = 0; j < btns.length; j++) {
+        btns[j].addEventListener("click", function () {
+          var iid = Number(this.getAttribute("data-id"));
+          for (var k = 0; k < state.items.length; k++) {
+            if (state.items[k].id === iid) {
+              state.items[k].active = !state.items[k].active;
+              break;
+            }
+          }
+          persist();
+          renderAll();
+        });
       }
     }
 
@@ -173,6 +392,7 @@
         statusBtn.className = "status-btn offline";
       }
 
+      document.getElementById("drawerTitle").textContent = state.shopName || "khanaGo Merchant";
       document.getElementById("shopName").value = state.shopName || "";
       document.getElementById("ownerName").value = state.ownerName || "";
       document.getElementById("ownerPhone").value = state.ownerPhone || "";
@@ -185,6 +405,20 @@
       setImg(document.getElementById("dashLogoImg"), state.logo);
       setImg(document.getElementById("dashDocImg"), state.docImg);
 
+      var activeItemsCount = 0;
+      for (var i = 0; i < state.items.length; i++) {
+        if (state.items[i].active) activeItemsCount++;
+      }
+
+      var payout = 0;
+      for (var j = 0; j < state.orders.length; j++) {
+        if (state.orders[j].status !== "Cancelled") payout += Number(state.orders[j].amount || 0);
+      }
+
+      document.getElementById("statOrders").textContent = state.orders.length;
+      document.getElementById("statItems").textContent = activeItemsCount;
+      document.getElementById("statPayout").textContent = "₹" + payout;
+
       document.getElementById("dashTitle").textContent = (state.shopName || "Merchant") + " Dashboard";
       document.getElementById("summaryBox").innerHTML =
         "<strong>Shop Name:</strong> " + (state.shopName || "-") + "<br>" +
@@ -193,63 +427,16 @@
         "<strong>FSSAI Licence:</strong> " + (state.fssaiNo || "-") + "<br>" +
         "<strong>Shop Status:</strong> " + (state.online ? "ONLINE" : "OFFLINE");
 
-      showView();
+      renderOrders();
+      renderItems();
+      switchTab(state.onboarded ? state.activeTab : "onboarding");
     }
 
-    document.getElementById("statusBtn").addEventListener("click", function () {
-      state.online = !state.online;
-      persist();
-      renderAll();
+    document.getElementById("menuOpenBtn").addEventListener("click", function () {
+      document.getElementById("drawerBackdrop").style.display = "block";
     });
-
-    function attachFile(inputId, propName) {
-      document.getElementById(inputId).addEventListener("change", function (ev) {
-        var file = ev.target.files && ev.target.files[0];
-        if (!file) return;
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          state[propName] = e.target.result;
-          persist();
-          renderAll();
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    attachFile("logoFile", "logo");
-    attachFile("docFile", "docImg");
-
-    document.getElementById("saveBtn").addEventListener("click", function () {
-      var sName = document.getElementById("shopName").value.trim();
-      var oName = document.getElementById("ownerName").value.trim();
-      var oPhone = document.getElementById("ownerPhone").value.trim();
-      var bAcc = document.getElementById("bankAcc").value.trim();
-      var fssai = document.getElementById("fssaiNo").value.trim();
-      var err = document.getElementById("errMsg");
-
-      if (!sName || !oName || !oPhone || !bAcc || !fssai) {
-        err.textContent = "Kripya sabhi zaroori details bharein.";
-        return;
-      }
-
-      err.textContent = "";
-      state.shopName = sName;
-      state.ownerName = oName;
-      state.ownerPhone = oPhone;
-      state.bankAcc = bAcc;
-      state.fssaiNo = fssai;
-      state.onboarded = true;
-      persist();
-      renderAll();
+    document.getElementById("menuCloseBtn").addEventListener("click", function () {
+      document.getElementById("drawerBackdrop").style.display = "none";
     });
-
-    document.getElementById("editBtn").addEventListener("click", function () {
-      state.onboarded = false;
-      persist();
-      showView();
-    });
-
-    renderAll();
-  </script>
-</body>
-</html>
+    document.getElementById("drawerBackdrop").addEventListener("click", function (e) {
+      if (e.target.id === "drawerBac
