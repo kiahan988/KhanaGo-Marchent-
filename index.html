@@ -90,15 +90,15 @@
         <button type="button" class="icon-btn" onclick="toggleDrawer(false)">&times;</button>
       </div>
 
-      <button type="button" class="nav-btn active" data-tab="dashboard" onclick="menuSelect('dashboard', this)">📊 Dashboard</button>
-      <button type="button" class="nav-btn" data-tab="onboarding" onclick="menuSelect('onboarding', this)">🏪 Shop Onboarding & Docs</button>
-      <button type="button" class="nav-btn" data-tab="orders" onclick="menuSelect('orders', this)">🛍️ Orders</button>
-      <button type="button" class="nav-btn" data-tab="items" onclick="menuSelect('items', this)">📦 Items</button>
-      <button type="button" class="nav-btn" data-tab="menu" onclick="menuSelect('menu', this)">📋 Menu</button>
-      <button type="button" class="nav-btn" data-tab="wallet" onclick="menuSelect('wallet', this)">💳 Wallet</button>
-      <button type="button" class="nav-btn" data-tab="reports" onclick="menuSelect('reports', this)">📈 Reports</button>
-      <button type="button" class="nav-btn" data-tab="marketing" onclick="menuSelect('marketing', this)">📣 Marketing</button>
-      <button type="button" class="nav-btn" data-tab="settings" onclick="menuSelect('settings', this)">⚙️ Settings</button>
+      <button type="button" class="nav-btn active" onclick="menuSelect('dashboard', this)">📊 Dashboard</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('onboarding', this)">🏪 Shop Onboarding & Docs</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('orders', this)">🛍️ Orders</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('items', this)">📦 Items</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('menu', this)">📋 Menu</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('wallet', this)">💳 Wallet</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('reports', this)">📈 Reports</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('marketing', this)">📣 Marketing</button>
+      <button type="button" class="nav-btn" onclick="menuSelect('settings', this)">⚙️ Settings</button>
     </aside>
   </div>
 
@@ -263,82 +263,87 @@
   </main>
 
   <script>
-    const M_KEY = "khanago_merchant_state_v2";
-    const S_KEY = "khanago_shared_shops";
+    var M_KEY = "khanago_merchant_clean_v3";
+    var S_KEY = "khanago_shared_shops";
 
-    function makeInitData() {
-      return {
-        isOnline: true,
-        period: "Today",
-        ordFilter: "All",
-        shop: {
-          name: "Sharma Misthan & Bhojnalaya",
-          category: "Meals & Snacks",
-          deliveryTime: "20-30 mins",
-          ownerName: "Kishan Kumar",
-          ownerPhone: "7599044129",
-          address: "Jaswant Nagar, Etawah",
-          bankAcc: "",
-          bankIfsc: "",
-          fssaiNo: "",
-          logo: "",
-          bankImg: "",
-          fssaiImg: ""
-        },
-        menu: [
-          { id: 1, name: "Special Thali", price: 120, active: true },
-          { id: 2, name: "Paneer Paratha (2 pcs)", price: 90, active: true },
-          { id: 3, name: "Samosa (2 pcs)", price: 30, active: true }
-        ],
-        orders: [
-          { id: 101, customer: "Customer", items: "Special Thali x1", amount: 120, status: "New", paid: true }
-        ]
-      };
-    }
+    var isOnline = true;
+    var currentPeriod = "Today";
+    var currentOrdFilter = "All";
+    var shopData = {
+      name: "Sharma Misthan & Bhojnalaya",
+      category: "Meals & Snacks",
+      deliveryTime: "20-30 mins",
+      ownerName: "Kishan Kumar",
+      ownerPhone: "7599044129",
+      address: "Jaswant Nagar, Etawah",
+      bankAcc: "",
+      bankIfsc: "",
+      fssaiNo: "",
+      logo: "",
+      bankImg: "",
+      fssaiImg: ""
+    };
+    var menuList = [
+      { id: 1, name: "Special Thali", price: 120, active: true },
+      { id: 2, name: "Paneer Paratha (2 pcs)", price: 90, active: true },
+      { id: 3, name: "Samosa (2 pcs)", price: 30, active: true }
+    ];
+    var orderList = [
+      { id: 101, customer: "Customer", items: "Special Thali x1", amount: 120, status: "New", paid: true }
+    ];
 
-    let mState = loadM();
-    let ctx = null;
-
-    function loadM() {
-      const base = makeInitData();
-      try {
-        const raw = localStorage.getItem(M_KEY);
-        if (!raw) return base;
-        const p = JSON.parse(raw);
-        return {
-          isOnline: typeof p.isOnline === "boolean" ? p.isOnline : base.isOnline,
-          period: p.period || base.period,
-          ordFilter: p.ordFilter || base.ordFilter,
-          shop: Object.assign({}, base.shop, p.shop || {}),
-          menu: Array.isArray(p.menu) ? p.menu : base.menu,
-          orders: Array.isArray(p.orders) ? p.orders : base.orders
-        };
-      } catch (e) {
-        return base;
+    try {
+      var savedRaw = localStorage.getItem(M_KEY);
+      if (savedRaw) {
+        var parsed = JSON.parse(savedRaw);
+        if (parsed && typeof parsed === "object") {
+          if (typeof parsed.isOnline === "boolean") isOnline = parsed.isOnline;
+          if (parsed.currentPeriod) currentPeriod = parsed.currentPeriod;
+          if (parsed.currentOrdFilter) currentOrdFilter = parsed.currentOrdFilter;
+          if (parsed.shopData) {
+            for (var k in parsed.shopData) {
+              shopData[k] = parsed.shopData[k];
+            }
+          }
+          if (parsed.menuList && parsed.menuList.length) menuList = parsed.menuList;
+          if (parsed.orderList) orderList = parsed.orderList;
+        }
       }
-    }
+    } catch (e) {}
 
-    function saveM() {
+    function persistAll() {
       try {
-        localStorage.setItem(M_KEY, JSON.stringify(mState));
-        syncToCustomer();
+        localStorage.setItem(M_KEY, JSON.stringify({
+          isOnline: isOnline,
+          currentPeriod: currentPeriod,
+          currentOrdFilter: currentOrdFilter,
+          shopData: shopData,
+          menuList: menuList,
+          orderList: orderList
+        }));
       } catch (e) {}
-    }
 
-    function syncToCustomer() {
       try {
-        const existing = JSON.parse(localStorage.getItem(S_KEY)) || [];
-        const shopId = "m_" + (mState.shop.ownerPhone || "shop");
-        const activeItems = (mState.menu || []).filter(i => i.active).map(i => ({ name: i.name, price: Number(i.price) }));
-        const rest = existing.filter(s => s.id !== shopId);
-        if (mState.isOnline && activeItems.length) {
+        var existing = JSON.parse(localStorage.getItem(S_KEY)) || [];
+        var sid = "m_" + (shopData.ownerPhone || "shop");
+        var activeMenu = [];
+        for (var i = 0; i < menuList.length; i++) {
+          if (menuList[i].active) {
+            activeMenu.push({ name: menuList[i].name, price: Number(menuList[i].price) });
+          }
+        }
+        var rest = [];
+        for (var j = 0; j < existing.length; j++) {
+          if (existing[j].id !== sid) rest.push(existing[j]);
+        }
+        if (isOnline && activeMenu.length > 0) {
           rest.unshift({
-            id: shopId,
-            name: mState.shop.name,
-            category: mState.shop.category,
-            deliveryTime: mState.shop.deliveryTime,
-            logo: mState.shop.logo || "",
-            items: activeItems
+            id: sid,
+            name: shopData.name,
+            category: shopData.category,
+            deliveryTime: shopData.deliveryTime,
+            logo: shopData.logo || "",
+            items: activeMenu
           });
         }
         localStorage.setItem(S_KEY, JSON.stringify(rest));
@@ -347,20 +352,19 @@
 
     function triggerBuzzer(manual) {
       try {
-        const AC = window.AudioContext || window.webkitAudioContext;
+        var AC = window.AudioContext || window.webkitAudioContext;
         if (AC) {
-          if (!ctx) ctx = new AC();
-          if (ctx.state === "suspended") ctx.resume();
-          const t = ctx.currentTime;
-          [0, 0.25, 0.5].forEach((d) => {
-            const osc = ctx.createOscillator();
-            const g = ctx.createGain();
+          var actx = new AC();
+          var t = actx.currentTime;
+          [0, 0.25, 0.5].forEach(function (d) {
+            var osc = actx.createOscillator();
+            var g = actx.createGain();
             osc.type = "sawtooth";
             osc.frequency.setValueAtTime(760, t + d);
             g.gain.setValueAtTime(0.22, t + d);
             g.gain.exponentialRampToValueAtTime(0.001, t + d + 0.2);
             osc.connect(g);
-            g.connect(ctx.destination);
+            g.connect(actx.destination);
             osc.start(t + d);
             osc.stop(t + d + 0.21);
           });
@@ -370,24 +374,24 @@
     }
 
     function simulateOrder() {
-      const first = mState.menu.find(x => x.active) || { name: "Special Thali", price: 120 };
-      mState.orders.unshift({
+      var pick = menuList[0] || { name: "Special Thali", price: 120 };
+      orderList.unshift({
         id: Math.floor(1000 + Math.random() * 9000),
         customer: "khanaGo Customer",
-        items: `${first.name} x1`,
-        amount: Number(first.price),
+        items: pick.name + " x1",
+        amount: Number(pick.price),
         status: "New",
         paid: true
       });
-      saveM();
+      persistAll();
       triggerBuzzer(false);
-      render();
+      updateUI();
     }
 
     function toggleOnline() {
-      mState.isOnline = !mState.isOnline;
-      saveM();
-      render();
+      isOnline = !isOnline;
+      persistAll();
+      updateUI();
     }
 
     function toggleDrawer(show) {
@@ -396,9 +400,9 @@
 
     function menuSelect(name, btn) {
       toggleDrawer(false);
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      var allNavs = document.querySelectorAll(".nav-btn");
+      for (var i = 0; i < allNavs.length; i++) allNavs[i].classList.remove("active");
       if (btn) btn.classList.add("active");
+
       if (name === "menu" || name === "items") {
-        document.getElementById("itemSecTitle").textContent = name === "menu" ? "Menu Management" : "Item Management";
-        openTab("items");
-      } else if (
+        document.getElementById("itemSecTitle").textContent = name === "menu" ? "Men
